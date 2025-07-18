@@ -1,0 +1,28 @@
+{
+  "name": "confession-bot",
+  "version": "0.1.0",
+  "description": "A manager for confessions.",
+  "keywords": [],
+  "homepage": "https://github.com/honaki-dev/confession-bot#readme",
+  "bugs": {
+    "url": "https://github.com/honaki-dev/confession-bot/issues"
+  },
+  "repository": "https://github.com/honaki-dev/confession-bot",
+  "license": "MIT",
+  "author": "Honaki",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node .",
+    "dev": "ts-node src"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "discord.js": "^14.21.0",
+    "dotenv": "^17.2.0"
+  }
+}
