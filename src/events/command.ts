@@ -9,6 +9,18 @@ export default new BotEvent({
     const cmdName = interaction.commandName;
     const cmd = bot.commands.get(cmdName);
     if (!cmd) return;
+
+    if (cmd.checks) {
+      for (const check of cmd.checks) {
+        try {
+          const { isOk, message } = check(interaction);
+          if (!isOk) return interaction.reply(message);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+
     try {
       cmd.run(interaction);
     } catch (err) {
