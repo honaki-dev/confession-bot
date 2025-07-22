@@ -2,6 +2,7 @@ import { checkPerms } from "../modules/checks/guild";
 import { SlashCommand } from "../models/SlashCommand";
 import { ConfessionClient } from "../models/ConfessionClient";
 import { confessionTable } from "../modules/getTableName";
+import { ConfessionSetting } from "../interfaces/ConfessionSetting";
 import { ChannelType, MessageFlags, PermissionFlagsBits } from "discord.js";
 
 export default new SlashCommand({
@@ -49,12 +50,9 @@ export default new SlashCommand({
 
     if (!channel) return;
 
-    const rawData = {
-      cfsChannelId: channel.id,
-      approvalChannelId: ""
-    };
-
-    await bot.db.set(table, rawData);
+    await bot.db.set<ConfessionSetting>(table, {
+      confession_channel_id: channel.id
+    });
 
     return interaction.reply({
       content: `Confessions channel has been created: ${channel.toString()}`,
