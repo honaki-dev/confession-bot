@@ -11,43 +11,40 @@ export default new BotEvent({
 
     // send modal
     if (interaction.isModalSubmit()) {
-      if (interaction.customId !== "send:confession") return;
-      const data = await bot.db.get<ConfessionSetting>(
-        confessionTable(interaction)
-      );
-      if (data) {
-        const cfsChannel = interaction.guild?.channels.cache.get(
-          data.confession_channel_id
+      if (interaction.customId === "send:confession") {
+        const data = await bot.db.get<ConfessionSetting>(
+          confessionTable(interaction)
         );
-        if (!cfsChannel) {
-          interaction.reply({
+
+        if (!data) {
+          return interaction.reply({
             content: "This server not has a confessions channel.",
             flags: [MessageFlags.Ephemeral]
           });
         }
-        if (cfsChannel?.isSendable()) {
-          const cfsContent = interaction.fields.getTextInputValue(
-            `send:confession:content`
+
+        const { confession_channel_id } = data;
+        const cfsChannel = interaction.guild?.channels.cache.get(
+          confession_channel_id
+        );
+        if (!cfsChannel) {
+          return interaction.reply(
+            [
+              "I can't see confessions channel.",
+              "Try `/configure` to edit confessions channel if you deleted it."
+            ].join("\n")
           );
-          const embed = new EmbedBuilder({ description: cfsContent });
-          cfsChannel.send({
-            embeds: [embed]
-          });
-          interaction.reply({
-            content: "Confession have been sent.",
-            flags: [MessageFlags.Ephemeral]
-          });
-        } else {
-          interaction.reply({
-            content: "I can't send this message, please check my permission.",
-            flags: [MessageFlags.Ephemeral]
-          });
         }
-      } else {
-        interaction.reply({
-          content: "This server not has a confessions channel.",
-          flags: [MessageFlags.Ephemeral]
-        });
+
+        const content = interaction.fields.getTextInputValue("confession");
+        const embed = new EmbedBuilder()
+          .setTitle("Confession")
+          .setDescription(content);
+        if (!cfsChannel.isSendable()) {
+          return interaction.reply("Confessions channel is not sendable.");
+        }
+        await cfsChannel.send({ embeds: [embed] });
+        return interaction.reply("Sent confession.");
       }
     }
   }

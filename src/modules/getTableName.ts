@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, Interaction } from "discord.js";
+import { Interaction } from "discord.js";
 
 export function confessionTable(interaction: Interaction) {
   const { guildId } = interaction;
